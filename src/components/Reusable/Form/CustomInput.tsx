@@ -34,6 +34,7 @@ const CustomInput: FC<CustomInputProps> = ({
           size="large"
           allowClear
           maxLength={max}
+          prefix={prefix ?? null}
         />
       ) : type === "textarea" ? (
         <Input.TextArea

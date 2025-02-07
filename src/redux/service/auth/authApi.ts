@@ -5,6 +5,11 @@ import { IUser } from "./authSlice";
 interface AuthResponse {
   user: IUser;
   token: string;
+  success?: boolean;
+  data: {
+    user: IUser;
+    token: string;
+  };
 }
 
 interface UserListResponse {

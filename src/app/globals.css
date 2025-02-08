@@ -5,3 +5,7 @@
 .ant-form-item-label {
   font-weight: 700 !important;
 }
+
+.jodit-status-bar {
+  display: none !important;
+}

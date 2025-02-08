@@ -1,12 +1,18 @@
 import { baseApi } from "@/redux/api/baseApi";
 
-export interface Book {
+export interface IBook {
   _id: string;
-  title: string;
+  name: string;
+  user: { _id: string };
   author: string;
+  description: string;
+  price: number;
   genre: string;
-  publishedAt: number;
-  coverImage: string;
+  language: string;
+  publishedAt: string;
+  coverImage: any;
+  success?: boolean;
+  message?: string;
 }
 
 interface Meta {
@@ -16,21 +22,20 @@ interface Meta {
 }
 
 interface BookListResponse {
+  success?: boolean;
   meta?: Meta;
-  results: Book[];
-}
-
-interface SingleBookResponse {
-  book: Book;
+  results: IBook[];
 }
 
 interface AddBookResponse {
-  book: Book;
+  book: IBook;
+  success?: boolean;
+  message: string;
 }
 
 interface UpdateBookPayload {
   id: string;
-  data: Partial<Book>;
+  data: Partial<IBook> | FormData;
 }
 
 interface DeleteBulkPayload {
@@ -40,7 +45,7 @@ interface DeleteBulkPayload {
 // Inject endpoints with response types
 const bookApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
-    addBook: build.mutation<AddBookResponse, Partial<Book>>({
+    addBook: build.mutation<AddBookResponse, FormData>({
       query: (data) => ({
         url: "/book/",
         method: "POST",
@@ -62,26 +67,25 @@ const bookApi = baseApi.injectEndpoints({
       }),
       providesTags: ["book"],
     }),
-    getAllBooks: build.query<{ results: Book[] }, void>({
+    getAllBooks: build.query<{ results: IBook[] }, void>({
       query: () => ({
         url: `/book/`,
         method: "GET",
       }),
-      transformResponse: (response: { data: { results: Book[] } }) => ({
+      transformResponse: (response: { data: { results: IBook[] } }) => ({
         results: response?.data?.results,
       }),
       providesTags: ["book"],
     }),
-    getSingleBook: build.query<SingleBookResponse, string>({
+    getSingleBook: build.query<IBook, string>({
       query: (id) => ({
         url: `/book/${id}/`,
         method: "GET",
       }),
-      transformResponse: (response: { data: SingleBookResponse }) =>
-        response?.data,
+      transformResponse: (response: { data: IBook }) => response?.data,
       providesTags: ["book"],
     }),
-    updateBook: build.mutation<Book, UpdateBookPayload>({
+    updateBook: build.mutation<IBook, UpdateBookPayload>({
       query: ({ id, data }) => ({
         url: `/book/${id}/`,
         method: "PATCH",
@@ -89,14 +93,17 @@ const bookApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["book"],
     }),
-    deleteBook: build.mutation<void, string>({
+    deleteBook: build.mutation<{ success: boolean; message: string }, string>({
       query: (id) => ({
         url: `/book/${id}/`,
         method: "DELETE",
       }),
       invalidatesTags: ["book"],
     }),
-    deleteBulkBook: build.mutation<void, DeleteBulkPayload>({
+    deleteBulkBook: build.mutation<
+      { success: boolean; message: string },
+      DeleteBulkPayload
+    >({
       query: (payload) => ({
         url: `/book/bulk-delete/`,
         method: "POST",

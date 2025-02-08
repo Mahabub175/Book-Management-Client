@@ -1,5 +1,11 @@
+import AllBooks from "@/components/AllSection/Book/AllBooks";
+
 const page = () => {
-  return <>This is the secured page</>;
+  return (
+    <>
+      <AllBooks />
+    </>
+  );
 };
 
 export default page;

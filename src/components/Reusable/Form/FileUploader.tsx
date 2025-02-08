@@ -17,7 +17,7 @@ interface FileUploaderProps {
   label: string;
   required?: boolean;
   multiple?: boolean;
-  defaultValue?: UploadFile[];
+  defaultValue?: string;
   small?: boolean;
 }
 
@@ -26,7 +26,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({
   label,
   required = false,
   multiple = false,
-  defaultValue = [],
+  defaultValue,
   small = false,
 }) => {
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -35,9 +35,8 @@ const FileUploader: React.FC<FileUploaderProps> = ({
   const [fileList, setFileList] = useState<UploadFile[]>([]);
 
   useEffect(() => {
-    if (defaultValue.length > 0) {
+    if (defaultValue) {
       setShowUploader(true);
-      setFileList(defaultValue);
     }
   }, [defaultValue]);
 
@@ -57,7 +56,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({
   const handleFileChange: UploadProps["onChange"] = (info) => {
     let newFileList = [...info.fileList];
 
-    newFileList = newFileList.slice(-1); // Keep only the latest file
+    newFileList = newFileList.slice(-1);
 
     newFileList = newFileList.map((file) => {
       if (file.response) {

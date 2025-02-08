@@ -1,16 +1,23 @@
 import { useRef } from "react";
 import dynamic from "next/dynamic";
+import { Form } from "antd";
 
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 
 interface CustomTextEditorProps {
-  value: string;
-  onChange: (content: string) => void;
+  value?: string;
+  onChange?: (content: string) => void;
+  name: string;
+  label: string;
+  required?: boolean;
 }
 
 const CustomTextEditor: React.FC<CustomTextEditorProps> = ({
   value,
   onChange,
+  name,
+  label,
+  required = false,
 }) => {
   const editorRef = useRef(null);
 
@@ -63,12 +70,19 @@ const CustomTextEditor: React.FC<CustomTextEditorProps> = ({
   };
 
   return (
-    <JoditEditor
-      ref={editorRef}
-      value={value}
-      config={config}
-      onBlur={(newContent) => onChange(newContent)}
-    />
+    <Form.Item
+      label={label}
+      name={name}
+      required={required}
+      rules={[{ required, message: `${label} is required` }]}
+    >
+      <JoditEditor
+        config={config}
+        ref={editorRef}
+        value={value}
+        onBlur={(newContent) => onChange?.(newContent)}
+      />
+    </Form.Item>
   );
 };
 

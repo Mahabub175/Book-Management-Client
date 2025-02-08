@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect } from "react";
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import { toast } from "sonner";

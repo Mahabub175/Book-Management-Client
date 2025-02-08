@@ -1,14 +1,3 @@
-export const filterUndefined = <T extends Record<string, any>>(
-  obj: T
-): Partial<T> => {
-  return Object.entries(obj).reduce<Partial<T>>((acc, [key, value]) => {
-    if (value !== undefined) {
-      (acc as Record<string, any>)[key] = value;
-    }
-    return acc;
-  }, {});
-};
-
 export const appendToFormData = <T extends Record<string, any>>(
   data: T,
   formData: FormData
@@ -18,7 +7,15 @@ export const appendToFormData = <T extends Record<string, any>>(
       value = value === "true" ? true : value === "false" ? false : value;
     }
 
-    if (Array.isArray(value) || (typeof value === "object" && value !== null)) {
+    if (value instanceof File) {
+      formData.append(key, value);
+    } else if (
+      Array.isArray(value) &&
+      value.length > 0 &&
+      value[0] instanceof File
+    ) {
+      value.forEach((file) => formData.append(key, file));
+    } else if (typeof value === "object" && value !== null) {
       formData.append(key, JSON.stringify(value));
     } else {
       formData.append(key, String(value));

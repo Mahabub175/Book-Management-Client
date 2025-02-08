@@ -8,9 +8,14 @@ import { FaSearch } from "react-icons/fa";
 
 const AllBooks = () => {
   const [openCreate, setOpenCreate] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
 
   return (
-    <section className="container mx-auto px-5 mt-10 lg:mt-20">
+    <section className="container mx-auto px-5 my-10 lg:my-20">
       <div className="flex flex-col lg:flex-row items-center justify-between">
         <Button
           type="primary"
@@ -24,10 +29,11 @@ const AllBooks = () => {
           allowClear
           className="lg:w-1/3"
           prefix={<FaSearch className="text-primary" />}
+          onChange={handleSearch}
         />
       </div>
       <div>
-        <BookList />
+        <BookList searchQuery={searchQuery} />
       </div>
       <CreateBook open={openCreate} setOpen={setOpenCreate} />
     </section>

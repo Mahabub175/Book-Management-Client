@@ -41,25 +41,30 @@ const BookCard: React.FC<{ item: Book }> = ({ item }) => {
   const isOwner = user?._id === item?.user?._id;
 
   return (
-    <div className="max-w-sm bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200">
-      <Image
-        src={item.coverImage}
-        alt={item.name}
-        width={100}
-        height={100}
-        className="w-full h-56 object-cover"
-      />
+    <div className="w-[160px] lg:w-[250px] h-[450px] bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 relative group">
+      <div className="overflow-hidden">
+        <Image
+          src={item.coverImage}
+          alt={item.name}
+          width={100}
+          height={100}
+          className="w-full h-[150px] lg:h-[200px] object-contain group-hover:scale-110 duration-500"
+        />
+      </div>
 
       <div className="p-4">
-        <h2 className="text-xl font-bold text-gray-900">{item.name}</h2>
+        <h2 className="lg:text-xl font-bold text-gray-900 mb-2">{item.name}</h2>
 
         <p className="text-sm text-gray-600">By {item.author}</p>
 
-        <p className="mt-2 text-gray-700 text-sm line-clamp-3">
+        <p className="mt-2 text-gray-700 text-sm line-clamp-3 lg:hidden">
+          {item.description.replace(/(<([^>]+)>)/gi, "").slice(0, 30)}...
+        </p>
+        <p className="mt-2 text-gray-700 text-sm line-clamp-3 hidden lg:block">
           {item.description.replace(/(<([^>]+)>)/gi, "").slice(0, 100)}...
         </p>
 
-        <div className="flex justify-between items-center mt-4">
+        <div className="flex flex-col lg:flex-row justify-between lg:items-center mt-4">
           <span className="text-lg font-semibold text-indigo-600">
             ${item.price}
           </span>
@@ -74,7 +79,7 @@ const BookCard: React.FC<{ item: Book }> = ({ item }) => {
           </span>
         </div>
 
-        <div className="flex justify-end gap-4 mt-4">
+        <div className="flex justify-end gap-4 mt-4 absolute bottom-2 right-5">
           {/* <button
             className="bg-green-500 text-white p-2 rounded flex items-center gap-1 hover:bg-green-600 duration-300"
             onClick={() => handleEdit(item._id)}

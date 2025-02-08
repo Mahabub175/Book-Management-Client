@@ -15,6 +15,13 @@ export default {
         primaryLight: "#E0F2FE",
         primaryDark: "#0C4A6E",
       },
+      screens: {
+        sm: "580px",
+        md: "600px",
+        lg: "980px",
+        xl: "1380px",
+        xxl: "1600px",
+      },
     },
   },
   plugins: [],

@@ -2,29 +2,43 @@ import React from "react";
 import { useGetAllBooksQuery } from "@/redux/service/book/bookApi";
 import BookCard from "./BookCard";
 import { Skeleton } from "antd";
+import { motion, AnimatePresence } from "framer-motion";
 
-const BookList: React.FC = () => {
+interface BookListProps {
+  searchQuery: string;
+}
+
+const BookList: React.FC<BookListProps> = ({ searchQuery }) => {
   const { data: books, isFetching, isError } = useGetAllBooksQuery(undefined);
 
-  const filteredBooks = books?.results;
+  const filteredBooks =
+    books?.results?.filter(
+      (book) =>
+        book.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        book.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        book.language.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        book.price.toString().includes(searchQuery)
+    ) || books?.results;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
-      {isFetching &&
-        Array.from({ length: 3 }).map((_, index) => (
-          <div
-            key={index}
-            className="max-w-sm bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 p-4"
-          >
-            <Skeleton.Image active className="w-full h-56" />
-            <Skeleton
-              active
-              title={false}
-              paragraph={{ rows: 2 }}
-              className="mt-2"
-            />
-          </div>
-        ))}
+    <div className="mt-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        {isFetching &&
+          Array.from({ length: 4 }).map((_, index) => (
+            <div
+              key={index}
+              className="max-w-sm bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 p-4"
+            >
+              <Skeleton.Image active className="w-full h-56" />
+              <Skeleton
+                active
+                title={false}
+                paragraph={{ rows: 2 }}
+                className="mt-2"
+              />
+            </div>
+          ))}
+      </div>
 
       {isError && !isFetching && (
         <p className="text-center text-red-500 col-span-full">
@@ -38,11 +52,21 @@ const BookList: React.FC = () => {
         </p>
       )}
 
-      <div className="grid grid-cols-1 ">
-        {!isFetching &&
-          filteredBooks?.map((item) => (
-            <BookCard key={item?._id} item={item} />
-          ))}
+      <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-5 lg:gap-20 lg:mt-10">
+        <AnimatePresence>
+          {!isFetching &&
+            filteredBooks?.map((item) => (
+              <motion.div
+                key={item?._id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+              >
+                <BookCard item={item} />
+              </motion.div>
+            ))}
+        </AnimatePresence>
       </div>
     </div>
   );

@@ -65,7 +65,7 @@ const CreateBook: React.FC<CreateBookProps> = ({ open, setOpen }) => {
     >
       <CustomForm onSubmit={onSubmit}>
         <BookForm />
-        <div className="flex justify-end items-center gap-6 mt-10">
+        <div className="flex flex-col lg:flex-row justify-end items-center gap-4 lg:gap-6 mt-10">
           <Button
             onClick={() => setOpen(false)}
             type="default"
@@ -77,7 +77,7 @@ const CreateBook: React.FC<CreateBookProps> = ({ open, setOpen }) => {
             type="primary"
             htmlType="submit"
             loading={isLoading}
-            className="font-bold px-10 border !border-primary"
+            className="!font-bold px-10 border !border-primary"
           >
             Add Book
           </Button>
